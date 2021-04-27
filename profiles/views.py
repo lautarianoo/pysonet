@@ -1,3 +1,10 @@
 from django.shortcuts import render
+from .serializers import GetUserNetSerializer
+from rest_framework.viewsets import ModelViewSet
 
-# Create your views here.
+from rest_framework import permissions
+
+class UserNetView(ModelViewSet):
+    '''Вывод пользователей'''
+    serializer_class = GetUserNetSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]

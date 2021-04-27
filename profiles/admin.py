@@ -12,7 +12,7 @@ class UserNetAdmin(UserAdmin):
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-        (_('Doc info'), {'fields': ('phone', 'avatar', 'gender')}),
+        (_('Doc info'), {'fields': ('phone', 'avatar', 'gende')}),
     )
 
 admin.site.register(UserNet, UserNetAdmin)
