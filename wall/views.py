@@ -1,33 +1,40 @@
-from rest_framework import permissions
-
+from rest_framework import permissions, generics
+from .serializers import ListPostSerializer
 from base.classes import CreateUpdateDestroy, CreateRetrieveUpdateDestroy
-from base.permissions import IsMemberGroup, IsAuthorEntry, IsAuthorCommentEntry
+from base.permissions import IsAuthor
 from .models import Post, Comment
 from .serializers import (PostSerializer, CreateCommentSerializer)
 
+class PostListView(generics.ListAPIView):
+    '''Список постов на стене пользователя'''
+    serializer_class = ListPostSerializer
+
+    def get_queryset(self):
+        return Post.objects.filter(user_id=self.kwargs.get('pk'))
+
 class PostView(CreateRetrieveUpdateDestroy):
-    """Редактирование записи в группе"""
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsMemberGroup]
+    """CRUD записи в группе"""
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes_by_action = {'get': [permissions.AllowAny],
-                                    'update': [IsAuthorEntry],
-                                    'destroy': [IsAuthorEntry]}
+                                    'update': [IsAuthor],
+                                    'destroy': [IsAuthor]}
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(user=self.request.user)
 
 
 class CommentsView(CreateUpdateDestroy):
     """Редактирование комментариев к запси"""
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsMemberGroup]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Comment.objects.all()
     serializer_class = CreateCommentSerializer
-    permission_classes_by_action = {'update': [IsAuthorCommentEntry],
-                                    'destroy': [IsAuthorCommentEntry]}
+    permission_classes_by_action = {'update': [IsAuthor],
+                                    'destroy': [IsAuthor]}
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(user=self.request.user)
 
     def perform_destroy(self, instance):
         instance.deleted = True
