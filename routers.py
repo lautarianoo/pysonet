@@ -23,4 +23,5 @@ urlpatterns = [
 
     path('wall/', include('wall.urls')),
     path('', include('profiles.urls')),
+    path('follower/', include('followers.urls')),
 ]

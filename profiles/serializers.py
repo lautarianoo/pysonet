@@ -15,3 +15,11 @@ class GetUserNetPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserNet
         exclude = ('password', 'last_login', 'is_active', 'is_staff', 'is_superuser', 'email', 'groups', 'user_permissions', 'phone', )
+
+class UserByFollowerSerializer(serializers.ModelSerializer):
+    '''Сериализация для подписоты'''
+    avatar = serializers.ImageField(read_only=True)
+
+    class Meta:
+        model = UserNet
+        fields = ('id', 'username', 'avatar', )
