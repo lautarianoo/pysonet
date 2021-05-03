@@ -21,3 +21,4 @@ class UserNetView(ModelViewSet):
 
     def get_queryset(self):
         return UserNet.objects.filter(id=self.request.user.id)
+
